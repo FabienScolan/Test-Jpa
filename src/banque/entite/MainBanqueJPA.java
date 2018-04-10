@@ -2,6 +2,7 @@ package banque.entite;
 
 import java.util.HashSet;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Set;
 
 import javax.persistence.EntityManager;
@@ -37,9 +38,28 @@ public class MainBanqueJPA {
 		Set<Client> lCli = new HashSet<Client>();
 		lCli.add(c);
 		lA.setClients(lCli);
+		AssuranceVie aV = new AssuranceVie();
+		aV.setNumero("654321");
+		aV.setSolde(5000.0);
+		aV.setClients(lCli);
+		aV.setDateFin(LocalDate.of(2050, 12, 30));
 		em.persist(b);
 		em.persist(c);
 		em.persist(lA);
+		em.persist(aV);
+		Operation op = new Operation();
+		op.setDate(LocalDateTime.of(2005, 4, 10, 11, 30));
+		op.setMontant(-500);
+		op.setMotif("Versement");
+		op.setCompte(lA);
+		Virement v = new Virement();
+		v.setDate(LocalDateTime.of(2002, 3, 7, 15, 30));
+		v.setMontant(1000);
+		v.setMotif("Ouverture assurance vie");
+		v.setCompte(aV);
+		v.setBeneficiaire("Dupond");
+		em.persist(op);
+		em.persist(v);
 		et.commit();
 		em.close();
 		entityManagerFactory.close();
